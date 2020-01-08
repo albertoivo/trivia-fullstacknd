@@ -125,10 +125,11 @@ class QuestionView extends Component {
         <div className="categories-list">
           <h2 onClick={() => {this.getQuestions()}}>Categories</h2>
           <ul>
-            {Object.keys(this.state.categories).map((id, ) => (
-              <li key={id} onClick={() => {this.getByCategory(id)}}>
-                {this.state.categories[id]}
-                <img className="category" src={`${this.state.categories[id]}.svg`}/>
+            {Object.keys(this.state.categories).map((idx, ) => (
+              <li key={this.state.categories[idx]['id']}
+                  onClick={() => {this.getByCategory(this.state.categories[idx]['id'])}}>
+                {this.state.categories[idx].type}
+                <img className="category" src={`${this.state.categories[idx].type.toLowerCase()}.svg`}/>
               </li>
             ))}
           </ul>
@@ -141,7 +142,7 @@ class QuestionView extends Component {
               key={q.id}
               question={q.question}
               answer={q.answer}
-              category={this.state.categories[q.category]} 
+              category={this.get_category(q.category)}
               difficulty={q.difficulty}
               questionAction={this.questionAction(q.id)}
             />
@@ -153,6 +154,15 @@ class QuestionView extends Component {
 
       </div>
     );
+  }
+
+  get_category = (cat_id) => {
+    for (let i in this.state.categories) {
+      if (this.state.categories[i]['id'] === cat_id) {
+        return this.state.categories[i]['type'].toLowerCase()
+      }
+    }
+    return undefined
   }
 }
 

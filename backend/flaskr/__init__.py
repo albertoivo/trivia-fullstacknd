@@ -63,7 +63,7 @@ def create_app(test_config=None):
     def get_questions():
         page = request.args.get('page', 1, type=int)
         start = (page - 1) * 10
-        end = start + 2
+        end = start + 10
 
         questions = Question.query.all()
 
@@ -78,12 +78,14 @@ def create_app(test_config=None):
         curr_cat = [question['category'] for question in formatted_questions]
         current_category = list(set(curr_cat))
 
-        return jsonify({
+        response = jsonify({
             'questions': formatted_questions[start:end],
             'total_questions': len(formatted_questions),
             'categories': formatted_categories,
             'current_category': current_category
         }), 200
+
+        return response
 
     '''
     @TODO: 
@@ -123,6 +125,23 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that 
     category to be shown. 
     '''
+
+    @app.route("/categories/<int:cat_id>/questions")
+    def get_by_category(cat_id):
+        page = request.args.get('page', 1, type=int)
+        start = (page - 1) * 10
+        end = start + 10
+
+        questions = Question.query.filter_by(category=cat_id).all()
+        formatted_question = [question.format() for question in questions]
+
+        response = jsonify({
+            'questions': formatted_question[start:end],
+            'total_questions': len(formatted_question),
+            'current_category': cat_id
+        })
+
+        return response
 
     '''
     @TODO: 
