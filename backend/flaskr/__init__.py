@@ -41,9 +41,10 @@ def create_app(test_config=None):
     '''
 
     @app.route("/categories")
-    @cross_origin()
     def get_categories():
-        return Category.query.all()
+        categories = Category.query.all()
+        formatted_categories = [cat.format() for cat in categories]
+        return jsonify(formatted_categories)
 
     '''
     @TODO: 
@@ -55,7 +56,34 @@ def create_app(test_config=None):
     TEST: At this point, when you start the application you should see 
     questions and categories generated, ten questions per page and pagination 
     at the bottom of the screen for three pages. Clicking on the page numbers 
-    should update the questions. '''
+    should update the questions.
+    '''
+
+    @app.route("/questions", methods=['GET'])
+    def get_questions():
+        page = request.args.get('page', 1, type=int)
+        start = (page - 1) * 10
+        end = start + 2
+
+        questions = Question.query.all()
+
+        if len(questions) == 0:
+            abort(404)
+
+        formatted_questions = [question.format() for question in questions]
+
+        categories = Category.query.all()
+        formatted_categories = [cat.format() for cat in categories]
+
+        curr_cat = [question['category'] for question in formatted_questions]
+        current_category = list(set(curr_cat))
+
+        return jsonify({
+            'questions': formatted_questions[start:end],
+            'total_questions': len(formatted_questions),
+            'categories': formatted_categories,
+            'current_category': current_category
+        }), 200
 
     '''
     @TODO: 
