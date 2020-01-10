@@ -100,25 +100,24 @@ class QuizView extends Component {
   }
 
   renderPrePlay(){
-      return (
-          <div className="quiz-play-holder">
-              <div className="choose-header">Choose Category</div>
-              <div className="category-holder">
-                  <div className="play-category" onClick={this.selectCategory}>ALL</div>
-                  {Object.keys(this.state.categories).map(id => {
+    const { categories } = this.state
+    return (
+        <div className="quiz-play-holder">
+            <div className="choose-header">Choose Category</div>
+            <div className="category-holder">
+                <div className="play-category" onClick={this.selectCategory}>ALL</div>
+                {Object.keys(categories).map((id, idx) => {
                   return (
-                    <div
-                      key={id}
-                      value={id}
+                    <div key={idx} value={id}
                       className="play-category"
-                      onClick={() => this.selectCategory({type:this.state.categories[id], id})}>
-                      {this.state.categories[id]}
+                      onClick={() => this.selectCategory({type:categories[id].type, id:categories[id].id})}>
+                      {categories[id].type}
                     </div>
                   )
-                })}
-              </div>
-          </div>
-      )
+              })}
+            </div>
+        </div>
+    )
   }
 
   renderFinalScore(){
@@ -164,7 +163,6 @@ class QuizView extends Component {
           </div>
         )
   }
-
 
   render() {
     return this.state.quizCategory
