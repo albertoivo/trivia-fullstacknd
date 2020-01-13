@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 
 class Search extends Component {
   state = {
-    query: '',
+    query: ''
   }
 
   getInfo = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     this.props.submitSearch(this.state.query)
   }
 
