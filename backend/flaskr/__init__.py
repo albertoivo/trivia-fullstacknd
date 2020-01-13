@@ -83,7 +83,7 @@ def create_app(test_config=None):
         if question is None or answer is None:
             abort(422)
 
-        Question(question, answer, difficulty, category).insert()
+        Question(question, answer, category, difficulty).insert()
 
         return jsonify({'sucess': True}), 200
 
