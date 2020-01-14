@@ -85,7 +85,7 @@ def create_app(test_config=None):
 
         Question(question, answer, category, difficulty).insert()
 
-        return jsonify({'sucess': True}), 200
+        return jsonify({'success': True}), 200
 
     @app.route('/search-questions', methods=["POST"])
     def search_questions():
