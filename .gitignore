@@ -1,3 +1,5 @@
 /frontend/node_modules/
 .idea
 /frontend/src/components/QuestionView-work.js
+backend/__pycache__/models.cpython-36.pyc
+backend/flaskr/__pycache__/__init__.cpython-36.pyc
