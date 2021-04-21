@@ -11,5 +11,6 @@ services:
       - POSTGRES_USER=caryn
       - POSTGRES_PASSWORD=
       - POSTGRES_PORT=5432
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - ./trivia.psql:/docker-entrypoint-initdb.d/init.sql
