@@ -23,7 +23,7 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,'
                                                              'Authorization,'
                                                              'true')
-        response.headers('Access-Control-Allow-Methods', 'GET,PATCH,POST,'
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,'
                                                              'DELETE,OPTIONS')
         return response
 
@@ -42,11 +42,11 @@ def create_app(test_config=None):
         end = start + 10
 
         questions = Question.query.all()
-
-        if len(questions) == 0:
-            abort(404)
-
         formatted_questions = [question.format() for question in questions]
+        current_questions = formatted_questions[start:end]
+
+        if len(current_questions) == 0:
+            abort(404)
 
         categories = Category.query.all()
         formatted_categories = [cat.format() for cat in categories]
@@ -55,7 +55,7 @@ def create_app(test_config=None):
         current_category = list(set(curr_cat))
 
         return jsonify({
-            'questions': formatted_questions[start:end],
+            'questions': current_questions,
             'total_questions': len(formatted_questions),
             'categories': formatted_categories,
             'current_category': current_category
@@ -118,14 +118,16 @@ def create_app(test_config=None):
 
         questions = Question.query.filter_by(category=cat_id).all()
         formatted_question = [question.format() for question in questions]
+        current_questions = formatted_question[start:end]
 
-        response = jsonify({
-            'questions': formatted_question[start:end],
+        if len(current_questions) == 0:
+            abort(404)
+
+        return jsonify({
+            'questions': current_questions,
             'total_questions': len(formatted_question),
             'current_category': cat_id
         })
-
-        return response
 
     @app.route("/quizzes", methods=['POST'])
     def quizzes():
@@ -153,19 +155,19 @@ def create_app(test_config=None):
             return jsonify({'question': False}), 200
 
     @app.errorhandler(404)
-    def not_found_error(error):
+    def not_found(error):
         return jsonify({
             'success': False,
             'error': 404,
-            'message': error
+            'message': 'resource not found'
         }), 404
 
     @app.errorhandler(422)
-    def server_error(error):
+    def unprocessable(error):
         return jsonify({
             'success': False,
             'error': 422,
-            'message': error
-        }), 404
+            'message': 'unprocessable'
+        }), 422
 
     return app
